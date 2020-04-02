@@ -1,12 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { AuthContext } from '../../context/auth/authState';
 
 import renderWarningAlert from '../../utils/renderWarningAlert';
+import Loader from '../partials/Loader';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+
   const history = useHistory();
   const { login, setError, error } = useContext(AuthContext);
 
@@ -27,14 +31,19 @@ const Login = () => {
     }
 
     try {
+      setLoading(true);
       await login({ username, password });
+      setLoading(false);
       setError(null);
       history.push('/');
     } catch (err) {
+      setLoading(false);
       resetField();
       setError(err.response.data);
     }
   };
+
+  if (loading === true) return <Loader />;
 
   return (
     <div className="center-vh auth-section">

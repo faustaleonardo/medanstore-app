@@ -1,8 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useContext, useEffect, Fragment } from 'react';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { Link, useHistory, useParams, Redirect } from 'react-router-dom';
 import axiosInstance from '../../../utils/axiosInstance';
 
 import { ItemContext } from '../../../context/items/itemState';
+import { AuthContext } from '../../../context/auth/authState';
 import renderWarningAlert from '../../../utils/renderWarningAlert';
 import WarningModal from '../../partials/WarningModal';
 
@@ -31,6 +33,8 @@ const ItemForm = ({ title, buttonName }) => {
   /** -----------end: set local state--------- */
 
   const { addItem, updateItem, setError, error } = useContext(ItemContext);
+  const { auth } = useContext(AuthContext);
+
   const history = useHistory();
   const { id } = useParams();
 
@@ -92,7 +96,11 @@ const ItemForm = ({ title, buttonName }) => {
     return pictures.map(picture => {
       return (
         <div className="border phone-picture-container" key={picture.id}>
-          <img src={picture.path} className="phone-picture" />
+          <img
+            src={picture.path}
+            className="phone-picture"
+            alt={picture.path}
+          />
           <button
             type="button"
             className="btn btn-outline-danger btn-sm btn-delete-phone-picture"
@@ -181,6 +189,8 @@ const ItemForm = ({ title, buttonName }) => {
       setError(err.response.data);
     }
   };
+
+  if (auth === false) return <Redirect to="/login" />;
 
   return (
     <Fragment>

@@ -34,6 +34,11 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: 'SIGNUP', payload: user });
   };
 
+  const logout = async () => {
+    await axiosInstance.get('api/v1/auth/logout');
+    dispatch({ type: 'LOGOUT', payload: null });
+  };
+
   const setError = data => {
     dispatch({ type: 'AUTH_ERROR', payload: data });
   };
@@ -46,6 +51,7 @@ export const AuthProvider = ({ children }) => {
         fetchUser,
         login,
         signup,
+        logout,
         setError
       }}
     >

@@ -1,13 +1,18 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { Fragment, useState, useContext, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 import { CategoryContext } from '../../../context/categories/categoryState';
 import WarningModal from '../../partials/WarningModal';
+import { AuthContext } from '../../../context/auth/authState';
+import Loader from '../../partials/Loader';
 
 const Category = () => {
   const { categories, getCategories, deleteCategory, isLoading } = useContext(
     CategoryContext
   );
+  const { auth } = useContext(AuthContext);
+
   const [id, setId] = useState(null);
 
   useEffect(() => {
@@ -44,16 +49,6 @@ const Category = () => {
   };
 
   const render = () => {
-    if (isLoading) return null;
-
-    if (!categories.length) {
-      return (
-        <div className="center-vh">
-          <h3>No record yet :(</h3>
-        </div>
-      );
-    }
-
     return (
       <table className="table table-bordered table-hover">
         <thead>
@@ -68,6 +63,19 @@ const Category = () => {
       </table>
     );
   };
+
+  if (isLoading) return <Loader />;
+  if (auth === false) return <Redirect to="/login" />;
+  else if (auth && Object.keys(auth).length && auth.roleId === 2)
+    return <Redirect to="/" />;
+
+  if (!categories.length) {
+    return (
+      <div className="center-vh">
+        <h3>No record yet :(</h3>
+      </div>
+    );
+  }
 
   return (
     <Fragment>

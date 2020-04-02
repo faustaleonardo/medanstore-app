@@ -1,14 +1,20 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { Fragment, useState, useContext, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 import { VoucherContext } from '../../../context/vouchers/voucherState';
+import { AuthContext } from '../../../context/auth/authState';
+
 import WarningModal from '../../partials/WarningModal';
 import formatDate from '../../../utils/formatDate';
+import Loader from '../../partials/Loader';
 
 const Voucher = () => {
   const { vouchers, getVouchers, deleteVoucher, isLoading } = useContext(
     VoucherContext
   );
+  const { auth } = useContext(AuthContext);
+
   const [id, setId] = useState(null);
 
   useEffect(() => {
@@ -75,6 +81,17 @@ const Voucher = () => {
       </table>
     );
   };
+
+  if (isLoading) return <Loader />;
+  if (auth === false) return <Redirect to="/login" />;
+
+  if (!vouchers.length) {
+    return (
+      <div className="center-vh">
+        <h3>No record yet :(</h3>
+      </div>
+    );
+  }
 
   return (
     <Fragment>

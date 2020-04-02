@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, useContext } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import axiosInstance from '../../utils/axiosInstance';
@@ -10,14 +11,18 @@ import formatCurrency from '../../utils/formatCurrency';
 import ConditionCheckbox from './ConditionCheckbox';
 import CategoryCheckbox from './CategoryCheckbox';
 import SortDropdown from './SortDropdown';
+import Loader from '../partials/Loader';
 
 const ItemList = () => {
   const { items, setItems } = useContext(ItemContext);
-  const [page, setPage] = useState(1);
-  const [nextPage, setNextPage] = useState(null);
-
   const { addCart } = useContext(CartContext);
   const { auth } = useContext(AuthContext);
+
+  const [categories, setCategories] = useState([]);
+  const [page, setPage] = useState(1);
+  const [nextPage, setNextPage] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   const history = useHistory();
 
   const query = window.location.search;
@@ -31,6 +36,12 @@ const ItemList = () => {
       setItems(result);
     };
 
+    const fetchCategories = async () => {
+      const response = await axiosInstance.get('/api/v1/categories');
+      const result = response.data.data.data;
+      setCategories(result);
+    };
+
     const hasNextPage = async () => {
       const response = await axiosInstance.get(
         `/api/v1/items/pictures?${queryStr}page=${page + 1}`
@@ -40,8 +51,15 @@ const ItemList = () => {
       else setNextPage(true);
     };
 
-    fetchItem();
-    hasNextPage();
+    const fetchData = () => {
+      setLoading(true);
+      fetchItem();
+      fetchCategories();
+      hasNextPage();
+      setLoading(false);
+    };
+
+    fetchData();
   }, [page]);
 
   const handleAddCart = item => {
@@ -109,7 +127,8 @@ const ItemList = () => {
     );
   };
 
-  if (!items.length || nextPage === null) return null;
+  if (!items.length || !categories.length || nextPage === null || loading)
+    return <Loader />;
 
   return (
     <div className="mt-5">
@@ -118,7 +137,7 @@ const ItemList = () => {
         <SortDropdown setPage={setPage} />
       </div>
       <div>
-        <CategoryCheckbox />
+        <CategoryCheckbox categories={categories} />
       </div>
       <div className="row row-cols-1 row-cols-md-3 mt-5">{renderContent()}</div>
       {renderPaginate()}

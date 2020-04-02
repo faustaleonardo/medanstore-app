@@ -1,13 +1,18 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { Fragment, useState, useContext, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import axiosInstance from '../../../utils/axiosInstance';
 
 import { ItemContext } from '../../../context/items/itemState';
+import { AuthContext } from '../../../context/auth/authState';
 import WarningModal from '../../partials/WarningModal';
 import formatCurrency from '../../../utils/formatCurrency';
+import Loader from '../../partials/Loader';
 
 const Item = () => {
   const { items, setItems, deleteItem } = useContext(ItemContext);
+  const { auth } = useContext(AuthContext);
+
   const [page, setPage] = useState(1);
   const [nextPage, setNextPage] = useState(true);
   const [id, setId] = useState(null);
@@ -95,7 +100,9 @@ const Item = () => {
     );
   };
 
-  if (!items.length) return null;
+  if (auth === false) return <Redirect to="/login" />;
+
+  if (!items.length) return <Loader />;
 
   return (
     <Fragment>

@@ -1,15 +1,19 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useContext, useEffect } from 'react';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { Link, useHistory, useParams, Redirect } from 'react-router-dom';
 import axiosInstance from '../../../utils/axiosInstance';
 
 import { CategoryContext } from '../../../context/categories/categoryState';
 import renderWarningAlert from '../../../utils/renderWarningAlert';
+import { AuthContext } from '../../../context/auth/authState';
 
 const CategoryForm = ({ title, buttonName }) => {
   const [value, setValue] = useState('');
   const { addCategory, updateCategory, setError, error } = useContext(
     CategoryContext
   );
+  const { auth } = useContext(AuthContext);
+
   const history = useHistory();
   const { id } = useParams();
 
@@ -37,6 +41,8 @@ const CategoryForm = ({ title, buttonName }) => {
       setError(err.response.data);
     }
   };
+
+  if (auth === false) return <Redirect to="/login" />;
 
   return (
     <div className="row mt-5">

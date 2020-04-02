@@ -1,20 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import axiosInstance from '../../utils/axiosInstance';
+import React from 'react';
 import queryString from 'query-string';
 
-const CategoryCheckbox = () => {
-  const [categories, setCategories] = useState([]);
+const CategoryCheckbox = ({ categories }) => {
   let fullUrlAddress = window.location.href;
   let baseUrlAddress = fullUrlAddress.split('?')[0];
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      const response = await axiosInstance.get('/api/v1/categories');
-      const result = response.data.data.data;
-      setCategories(result);
-    };
-    fetchCategories();
-  }, []);
 
   const isChecked = categoryId => {
     return fullUrlAddress.includes(`categoryId=${categoryId}`) ? true : false;

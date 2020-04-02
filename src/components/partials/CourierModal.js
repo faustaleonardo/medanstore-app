@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect, useState } from 'react';
 import { CartContext } from '../../context/carts/cartState';
 import axiosInstance from '../../utils/axiosInstance';
