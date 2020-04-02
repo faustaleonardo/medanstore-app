@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { CartContext } from '../../context/carts/cartState';
 import formatCurrency from '../../utils/formatCurrency';
 
-import axios from 'axios';
+import axiosInstance from '../../utils/axiosInstance';
 
 import ItemCarousel from './ItemCarousel';
 
@@ -16,7 +16,9 @@ const ItemDetails = () => {
 
   useEffect(() => {
     const fetchItem = async () => {
-      let response = await axios.get(`/api/v1/items/${id}/category&pictures`);
+      let response = await axiosInstance.get(
+        `/api/v1/items/${id}/category&pictures`
+      );
       const result = response.data.data.data;
       setItem(result);
     };

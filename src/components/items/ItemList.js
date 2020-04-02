@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from '../../utils/axiosInstance';
 
 import { ItemContext } from '../../context/items/itemState';
 import { CartContext } from '../../context/carts/cartState';
@@ -24,7 +24,7 @@ const ItemList = () => {
   useEffect(() => {
     let queryStr = query ? query.replace(/[?]/, '') + '&' : '';
     const fetchItem = async () => {
-      const response = await axios.get(
+      const response = await axiosInstance.get(
         `/api/v1/items/pictures?${queryStr}page=${page}`
       );
       const result = response.data.data.data;
@@ -32,7 +32,7 @@ const ItemList = () => {
     };
 
     const hasNextPage = async () => {
-      const response = await axios.get(
+      const response = await axiosInstance.get(
         `/api/v1/items/pictures?${queryStr}page=${page + 1}`
       );
       const result = response.data.data.data;

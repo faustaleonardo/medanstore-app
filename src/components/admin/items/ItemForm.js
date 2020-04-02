@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect, Fragment } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from '../../../utils/axiosInstance';
 
 import { ItemContext } from '../../../context/items/itemState';
 import renderWarningAlert from '../../../utils/renderWarningAlert';
@@ -38,7 +38,7 @@ const ItemForm = ({ title, buttonName }) => {
     setError(null);
 
     const fetchCategories = async () => {
-      const response = await axios.get('/api/v1/categories');
+      const response = await axiosInstance.get('/api/v1/categories');
       const result = response.data.data.data;
       setCategories(result);
     };
@@ -46,7 +46,9 @@ const ItemForm = ({ title, buttonName }) => {
 
     /** -----------start: fetching data for updating item--------- */
     const fetchItem = async () => {
-      const response = await axios.get(`/api/v1/items/${id}/category&pictures`);
+      const response = await axiosInstance.get(
+        `/api/v1/items/${id}/category&pictures`
+      );
       const item = response.data.data.data;
 
       setName(item.name);
@@ -71,7 +73,7 @@ const ItemForm = ({ title, buttonName }) => {
   /** -----------end: fetching data for updating item--------- */
 
   const deletePicture = async id => {
-    await axios.delete(`/api/v1/pictures/${id}`);
+    await axiosInstance.delete(`/api/v1/pictures/${id}`);
     window.location.reload();
   };
 
@@ -111,7 +113,7 @@ const ItemForm = ({ title, buttonName }) => {
     for (const key of Object.keys(images)) {
       formData.append('images', images[key]);
     }
-    await axios.post(`/api/v1/pictures/items/${id}`, formData);
+    await axiosInstance.post(`/api/v1/pictures/items/${id}`, formData);
   };
 
   const handleSubmit = async event => {
@@ -162,11 +164,11 @@ const ItemForm = ({ title, buttonName }) => {
       /** -----------start: run axios and set global state--------- */
       let item;
       if (!id) {
-        const response = await axios.post('/api/v1/items', data);
+        const response = await axiosInstance.post('/api/v1/items', data);
         item = response.data.data.data;
         addItem(data);
       } else {
-        const response = await axios.patch(`/api/v1/items/${id}`, data);
+        const response = await axiosInstance.patch(`/api/v1/items/${id}`, data);
         item = response.data.data.data;
         updateItem(data);
       }

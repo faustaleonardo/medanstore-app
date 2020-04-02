@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axiosInstance from '../../utils/axiosInstance';
 import queryString from 'query-string';
 
 const CategoryCheckbox = () => {
@@ -9,7 +9,7 @@ const CategoryCheckbox = () => {
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const response = await axios.get('/api/v1/categories');
+      const response = await axiosInstance.get('/api/v1/categories');
       const result = response.data.data.data;
       setCategories(result);
     };

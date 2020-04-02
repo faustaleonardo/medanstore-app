@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState, useContext } from 'react';
-import axios from 'axios';
+import axiosInstance from '../../utils/axiosInstance';
 import StripeCheckout from 'react-stripe-checkout';
 import { Redirect } from 'react-router-dom';
 
@@ -18,11 +18,11 @@ const Order = () => {
   const { auth } = useContext(AuthContext);
 
   const cancelPayment = async orderId => {
-    await axios.patch(`/api/v1/payments/${orderId}`, { active: false });
+    await axiosInstance.patch(`/api/v1/payments/${orderId}`, { active: false });
   };
 
   const handleStripeToken = async (orderId, token) => {
-    await axios.patch(`api/v1/payments/${orderId}/stripe`, {
+    await axiosInstance.patch(`api/v1/payments/${orderId}/stripe`, {
       token: token.id
     });
     window.location.reload();
@@ -31,10 +31,12 @@ const Order = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`/api/v1/payments?page=${page}`);
+        const response = await axiosInstance.get(
+          `/api/v1/payments?page=${page}`
+        );
         const payments = response.data.data.data;
         for (const payment of payments) {
-          const response = await axios.get(
+          const response = await axiosInstance.get(
             `api/v1/orders/${payment.orderId}/items`
           );
           payment.orders = response.data.data.data;
@@ -47,7 +49,9 @@ const Order = () => {
     };
 
     const hasNextPage = async () => {
-      const response = await axios.get(`/api/v1/payments?page=${page + 1}`);
+      const response = await axiosInstance.get(
+        `/api/v1/payments?page=${page + 1}`
+      );
       const result = response.data.data.data;
       if (result.length === 0) setNextPage(false);
       else setNextPage(true);

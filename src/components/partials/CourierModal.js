@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { CartContext } from '../../context/carts/cartState';
-import axios from 'axios';
+import axiosInstance from '../../utils/axiosInstance';
 import $ from 'jquery';
 
 import formatCurrency from '../../utils/formatCurrency';
@@ -17,7 +17,7 @@ const CourierModal = ({ city, quantity }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let response = await axios.get(
+        let response = await axiosInstance.get(
           `/api/v1/raja-ongkir/${city.value}/costs?quantity=${quantity}`
         );
         const results = response.data.data.data;

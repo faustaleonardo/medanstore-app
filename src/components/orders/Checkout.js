@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect, Fragment } from 'react';
 import { Redirect, useHistory } from 'react-router-dom';
 import Select from 'react-select';
-import axios from 'axios';
+import axiosInstance from '../../utils/axiosInstance';
 
 import { CartContext } from '../../context/carts/cartState';
 import { AuthContext } from '../../context/auth/authState';
@@ -39,7 +39,7 @@ const Checkout = () => {
   useEffect(() => {
     const fetchCities = async () => {
       setLoading(true);
-      const response = await axios.get('/api/v1/raja-ongkir/cities');
+      const response = await axiosInstance.get('/api/v1/raja-ongkir/cities');
       const cities = response.data.data.data.rajaongkir.results;
       const filteredCities = cities.map(city => ({
         value: city.city_id,
@@ -76,7 +76,7 @@ const Checkout = () => {
 
     try {
       setLoading(true);
-      const response = await axios.get(`/api/v1/vouchers/${voucher}`);
+      const response = await axiosInstance.get(`/api/v1/vouchers/${voucher}`);
       const result = response.data.data.data;
 
       if (error) setError(null);
@@ -117,7 +117,7 @@ const Checkout = () => {
       data = {
         items
       };
-      response = await axios.post('/api/v1/orders', data);
+      response = await axiosInstance.post('/api/v1/orders', data);
       const order = response.data.data.data;
 
       // create payment
@@ -129,7 +129,7 @@ const Checkout = () => {
         courier: courier.name,
         finalPrice
       };
-      await axios.post(`/api/v1/payments/${orderId}`, data);
+      await axiosInstance.post(`/api/v1/payments/${orderId}`, data);
 
       history.push('/orders');
     } catch (err) {

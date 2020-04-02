@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from '../../../utils/axiosInstance';
 
 import { CategoryContext } from '../../../context/categories/categoryState';
 import renderWarningAlert from '../../../utils/renderWarningAlert';
@@ -18,7 +18,7 @@ const CategoryForm = ({ title, buttonName }) => {
 
     // update category
     const fetchCategory = async () => {
-      const response = await axios.get(`/api/v1/categories/${id}`);
+      const response = await axiosInstance.get(`/api/v1/categories/${id}`);
       const category = response.data.data.data;
       setValue(category.value);
     };

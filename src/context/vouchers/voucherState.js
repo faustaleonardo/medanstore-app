@@ -1,5 +1,5 @@
 import React, { createContext, useReducer } from 'react';
-import axios from 'axios';
+import axiosInstance from '../../utils/axiosInstance';
 
 import voucherReducer from './voucherReducer';
 
@@ -17,28 +17,28 @@ export const VoucherProvider = ({ children }) => {
 
   // actions
   const getVouchers = async () => {
-    const response = await axios.get('/api/v1/vouchers');
+    const response = await axiosInstance.get('/api/v1/vouchers');
     const vouchers = response.data.data.data;
 
     dispatch({ type: 'GET_VOUCHERS', payload: vouchers });
   };
 
   const addVoucher = async data => {
-    const response = await axios.post('/api/v1/vouchers', data);
+    const response = await axiosInstance.post('/api/v1/vouchers', data);
     const voucher = response.data.data.data;
 
     dispatch({ type: 'ADD_VOUCHER', payload: voucher });
   };
 
   const updateVoucher = async (id, data) => {
-    const response = await axios.patch(`/api/v1/vouchers/${id}`, data);
+    const response = await axiosInstance.patch(`/api/v1/vouchers/${id}`, data);
     const voucher = response.data.data.data;
 
     dispatch({ type: 'UPDATE_VOUCHER', payload: voucher });
   };
 
   const deleteVoucher = async id => {
-    await axios.delete(`/api/v1/vouchers/${id}`);
+    await axiosInstance.delete(`/api/v1/vouchers/${id}`);
 
     dispatch({ type: 'DELETE_VOUCHER', payload: id });
   };

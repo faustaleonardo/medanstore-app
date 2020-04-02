@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from '../../../utils/axiosInstance';
 
 import { VoucherContext } from '../../../context/vouchers/voucherState';
 import renderWarningAlert from '../../../utils/renderWarningAlert';
@@ -20,7 +20,7 @@ const VoucherForm = ({ title, buttonName }) => {
 
     // update voucher
     const fetchVoucher = async () => {
-      const response = await axios.get(`/api/v1/vouchers/${id}`);
+      const response = await axiosInstance.get(`/api/v1/vouchers/${id}`);
       const voucher = response.data.data.data;
 
       setCode(voucher.code);

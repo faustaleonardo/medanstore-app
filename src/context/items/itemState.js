@@ -1,5 +1,5 @@
 import React, { createContext, useReducer } from 'react';
-import axios from 'axios';
+import axiosInstance from '../../utils/axiosInstance';
 
 import itemReducer from './itemReducer.js';
 
@@ -28,8 +28,8 @@ export const ItemProvider = ({ children }) => {
   };
 
   const deleteItem = async id => {
-    await axios.delete(`/api/v1/pictures/items/${id}`);
-    await axios.delete(`/api/v1/items/${id}`);
+    await axiosInstance.delete(`/api/v1/pictures/items/${id}`);
+    await axiosInstance.delete(`/api/v1/items/${id}`);
 
     dispatch({ type: 'DELETE_ITEM', payload: id });
   };

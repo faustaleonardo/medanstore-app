@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from '../../../utils/axiosInstance';
 
 import { ItemContext } from '../../../context/items/itemState';
 import WarningModal from '../../partials/WarningModal';
@@ -14,13 +14,15 @@ const Item = () => {
 
   useEffect(() => {
     const fetchItem = async () => {
-      const response = await axios.get(`/api/v1/items?page=${page}`);
+      const response = await axiosInstance.get(`/api/v1/items?page=${page}`);
       const result = response.data.data.data;
       setItems(result);
     };
 
     const hasNextPage = async () => {
-      const response = await axios.get(`/api/v1/items/?page=${page + 1}`);
+      const response = await axiosInstance.get(
+        `/api/v1/items/?page=${page + 1}`
+      );
       const result = response.data.data.data;
       if (result.length === 0) setNextPage(false);
       else setNextPage(true);

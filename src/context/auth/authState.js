@@ -1,5 +1,5 @@
 import React, { createContext, useReducer } from 'react';
-import axios from 'axios';
+import axiosInstance from '../../utils/axiosInstance';
 
 import authReducer from './authReducer';
 
@@ -16,19 +16,19 @@ export const AuthProvider = ({ children }) => {
 
   // actions
   const fetchUser = async () => {
-    const response = await axios.get('/api/v1/auth/user');
+    const response = await axiosInstance.get('/api/v1/auth/user');
     dispatch({ type: 'FETCH_USER', payload: response.data.data.data });
   };
 
   const login = async data => {
-    const response = await axios.post('/api/v1/auth/login', data);
+    const response = await axiosInstance.post('/api/v1/auth/login', data);
     const user = response.data.data.data;
 
     dispatch({ type: 'LOGIN', payload: user });
   };
 
   const signup = async data => {
-    const response = await axios.post('/api/v1/auth/signup', data);
+    const response = await axiosInstance.post('/api/v1/auth/signup', data);
     const user = response.data.data.data;
 
     dispatch({ type: 'SIGNUP', payload: user });
